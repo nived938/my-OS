@@ -1,7 +1,33 @@
-bin/
-obj/
+## Visual Studio & .NET Build Artifacts
+[Bb]in/
+[Oo]bj/
+[Pp]ublish/
+[Tt]est[Rr]esults/
+
+## Visual Studio Cache & User Files
+.vs/
+.vscode/
 *.user
 *.suo
-.vs/
+*.userosv
+*.sln.docstates
+*.userprefs
+*.DotSettings.user
+*.pidb
+
+## Temporary files & Logs
 *.tmp
-publish/
+*.log
+*.swp
+*~
+
+## Databases
+*.db
+*.sqlite
+
+## OS Generated Files
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+.DS_Store
