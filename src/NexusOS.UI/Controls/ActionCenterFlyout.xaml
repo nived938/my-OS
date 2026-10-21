@@ -1,0 +1,63 @@
+<UserControl x:Class="NexusOS.UI.Controls.ActionCenterFlyout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="360"
+             Width="360">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Themes/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DropShadowEffect x:Key="FlyoutShadow" BlurRadius="28" ShadowDepth="10" Direction="270" Color="Black" Opacity="0.45" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Background="{DynamicResource NexusSurfaceTranslucentBrush}"
+            BorderBrush="{DynamicResource NexusBorderBrush}"
+            BorderThickness="1"
+            CornerRadius="12"
+            Padding="16"
+            Effect="{StaticResource FlyoutShadow}">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,12">
+                <TextBlock Text="Notifications" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" />
+                <Button x:Name="ClearAllButton" Content="Clear all" Style="{StaticResource NexusButtonGhost}" 
+                        HorizontalAlignment="Right" Padding="8,2" FontSize="11.5" Click="ClearAllButton_Click" />
+            </Grid>
+
+            <!-- Notification Items List -->
+            <ScrollViewer Grid.Row="1" MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="NotificationsListContainer">
+                    <TextBlock x:Name="NoNotificationsText" Text="No new notifications" 
+                               Foreground="{DynamicResource NexusTextMutedBrush}" 
+                               HorizontalAlignment="Center" Margin="0,30" />
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Mini Calendar / Clock Footer -->
+            <Border Grid.Row="2" Background="{DynamicResource NexusSurfaceBrush}" 
+                    BorderBrush="{DynamicResource NexusBorderSubtleBrush}" BorderThickness="1"
+                    CornerRadius="8" Padding="12" Margin="0,12,0,0">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock x:Name="CalendarDateText" Text="Wednesday, October 21" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="No scheduled events for today" FontSize="11.5" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

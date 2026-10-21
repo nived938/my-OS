@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\NexusOS.Core\NexusOS.Core.csproj" />
+    <ProjectReference Include="..\NexusOS.Infrastructure\NexusOS.Infrastructure.csproj" />
+    <ProjectReference Include="..\NexusOS.UI\NexusOS.UI.csproj" />
+    <ProjectReference Include="..\NexusOS.Apps\NexusOS.Apps.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

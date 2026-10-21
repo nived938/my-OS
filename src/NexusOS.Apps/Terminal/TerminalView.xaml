@@ -1,0 +1,56 @@
+<UserControl x:Class="NexusOS.Apps.Terminal.TerminalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NexusOS.UI;component/Themes/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="#0A0E17">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="34" /> <!-- Tabs -->
+            <RowDefinition Height="*" />  <!-- Terminal Output -->
+            <RowDefinition Height="36" /> <!-- Input Line -->
+        </Grid.RowDefinitions>
+
+        <!-- Tabs Toolbar -->
+        <Border Grid.Row="0" Background="#111827" BorderBrush="#1F2937" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0">
+                <Button Content="Nexus Shell (v1.0)" Style="{StaticResource NexusButtonPrimary}" Padding="10,2" Margin="2,0" FontSize="11" />
+                <Button Content="Host PowerShell" Style="{StaticResource NexusButtonGhost}" Padding="10,2" Margin="2,0" FontSize="11" Click="HostPowerShellTab_Click" />
+            </StackPanel>
+        </Border>
+
+        <!-- Output ScrollViewer -->
+        <ScrollViewer x:Name="TerminalScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="12">
+            <TextBlock x:Name="OutputTextBlock" FontFamily="Consolas, Cascadia Code, monospace" FontSize="13" 
+                       Foreground="#E2E8F0" TextWrapping="Wrap" />
+        </ScrollViewer>
+
+        <!-- Input Bar -->
+        <Border Grid.Row="2" Background="#111827" BorderBrush="#1F2937" BorderThickness="0,1,0,0" Padding="8,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="PromptLabel" Grid.Column="0" Text="nexus@desktop:~$ " 
+                           FontFamily="Consolas, monospace" FontSize="13" FontWeight="Bold"
+                           Foreground="{DynamicResource NexusAccentBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+
+                <TextBox x:Name="CommandLineInput" Grid.Column="1" Background="Transparent" 
+                         BorderThickness="0" Foreground="#F8FAFC" FontFamily="Consolas, monospace" 
+                         FontSize="13" CaretBrush="White" VerticalAlignment="Center" KeyDown="CommandLineInput_KeyDown" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

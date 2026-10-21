@@ -1,0 +1,211 @@
+<UserControl x:Class="NexusOS.Apps.Settings.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="650" d:DesignWidth="850">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NexusOS.UI;component/Themes/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource NexusBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar Navigation -->
+        <Border Grid.Column="0" Background="{DynamicResource NexusSurfaceBrush}" BorderBrush="{DynamicResource NexusBorderSubtleBrush}" BorderThickness="0,0,1,0" Padding="16,20">
+            <StackPanel>
+                <TextBlock Text="SETTINGS" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource NexusAccentBrush}" Margin="8,0,0,16" />
+
+                <ListBox x:Name="SettingsNavList" Background="Transparent" BorderThickness="0" SelectionChanged="SettingsNavList_SelectionChanged">
+                    <ListBoxItem Content="Personalization" Tag="Personalization" IsSelected="True" />
+                    <ListBoxItem Content="Display" Tag="Display" />
+                    <ListBoxItem Content="Storage" Tag="Storage" />
+                    <ListBoxItem Content="Privacy &amp; Security" Tag="Security" />
+                    <ListBoxItem Content="Performance" Tag="Performance" />
+                    <ListBoxItem Content="About" Tag="About" />
+                </ListBox>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content Area -->
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Padding="28">
+            <StackPanel x:Name="SettingsContentPanel">
+
+                <!-- 1. PERSONALIZATION PANEL -->
+                <StackPanel x:Name="PanelPersonalization" Visibility="Visible">
+                    <TextBlock Text="Personalization" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="Customize your desktop wallpaper, accent colors, transparency, and window style." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <!-- Theme Mode Card -->
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <DockPanel>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Theme Mode" FontWeight="SemiBold" FontSize="14" />
+                                <TextBlock Text="Switch between Dark and Light visual styles" FontSize="12" Foreground="{DynamicResource NexusTextMutedBrush}" />
+                            </StackPanel>
+                            <ComboBox x:Name="ThemeModeComboBox" HorizontalAlignment="Right" Width="140" SelectionChanged="ThemeModeComboBox_SelectionChanged">
+                                <ComboBoxItem Content="Dark Mode" IsSelected="True" />
+                                <ComboBoxItem Content="Light Mode" />
+                            </ComboBox>
+                        </DockPanel>
+                    </Border>
+
+                    <!-- Accent Color Presets Card -->
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Accent Color" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,4" />
+                            <TextBlock Text="Choose the accent color applied across windows, buttons, and taskbar indicators." FontSize="12" Foreground="{DynamicResource NexusTextMutedBrush}" Margin="0,0,0,12" />
+                            
+                            <WrapPanel x:Name="ColorPresetsWrapPanel">
+                                <Button Width="36" Height="36" Background="#2563EB" Margin="4" ToolTip="Royal Blue" Click="AccentColor_Click" Tag="#2563EB" />
+                                <Button Width="36" Height="36" Background="#7C3AED" Margin="4" ToolTip="Cyber Purple" Click="AccentColor_Click" Tag="#7C3AED" />
+                                <Button Width="36" Height="36" Background="#059669" Margin="4" ToolTip="Emerald Green" Click="AccentColor_Click" Tag="#059669" />
+                                <Button Width="36" Height="36" Background="#DC2626" Margin="4" ToolTip="Crimson Red" Click="AccentColor_Click" Tag="#DC2626" />
+                                <Button Width="36" Height="36" Background="#D97706" Margin="4" ToolTip="Amber Gold" Click="AccentColor_Click" Tag="#D97706" />
+                                <Button Width="36" Height="36" Background="#0891B2" Margin="4" ToolTip="Neon Cyan" Click="AccentColor_Click" Tag="#0891B2" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Wallpaper Presets Card -->
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Desktop Background &amp; Wallpaper" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,4" />
+                            <TextBlock Text="Curated high-resolution wallpapers with zero-black-screen fallback protection." FontSize="12" Foreground="{DynamicResource NexusTextMutedBrush}" Margin="0,0,0,12" />
+                            
+                            <WrapPanel Margin="0,0,0,12">
+                                <Button Content="Nexus Aurora" Style="{StaticResource NexusButtonGhost}" Margin="4" Click="WallpaperPreset_Click" Tag="Nexus Aurora" />
+                                <Button Content="Cyber Horizon" Style="{StaticResource NexusButtonGhost}" Margin="4" Click="WallpaperPreset_Click" Tag="Cyber Horizon" />
+                                <Button Content="Nordic Dark" Style="{StaticResource NexusButtonGhost}" Margin="4" Click="WallpaperPreset_Click" Tag="Nordic Dark" />
+                                <Button Content="Sunset Dunes" Style="{StaticResource NexusButtonGhost}" Margin="4" Click="WallpaperPreset_Click" Tag="Sunset Dunes" />
+                                <Button Content="Browse File..." Style="{StaticResource NexusButtonPrimary}" Margin="4" Click="BrowseCustomWallpaper_Click" />
+                            </WrapPanel>
+
+                            <DockPanel Margin="0,6,0,0">
+                                <TextBlock Text="Wallpaper Fit:" VerticalAlignment="Center" FontSize="12.5" />
+                                <ComboBox x:Name="WallpaperScaleCombo" HorizontalAlignment="Right" Width="130" SelectionChanged="WallpaperScaleCombo_SelectionChanged">
+                                    <ComboBoxItem Content="Fill" IsSelected="True" />
+                                    <ComboBoxItem Content="Fit" />
+                                    <ComboBoxItem Content="Stretch" />
+                                    <ComboBoxItem Content="Center" />
+                                </ComboBox>
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Window Styling & Corner Radius -->
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Window Appearance &amp; Animations" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,12" />
+                            
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="200" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Corner Radius (Rounded Windows)" VerticalAlignment="Center" />
+                                <Slider x:Name="CornerRadiusSlider" Grid.Column="1" Minimum="0" Maximum="20" Value="10" ValueChanged="CornerRadiusSlider_ValueChanged" />
+                            </Grid>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="200" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Window Transparency" VerticalAlignment="Center" />
+                                <Slider x:Name="TransparencySlider" Grid.Column="1" Minimum="0.5" Maximum="1.0" Value="0.88" ValueChanged="TransparencySlider_ValueChanged" />
+                            </Grid>
+
+                            <CheckBox x:Name="ReducedMotionCheckBox" Content="Reduced Motion (Instant window open/close for low latency)" Checked="ReducedMotion_Changed" Unchecked="ReducedMotion_Changed" Margin="0,6,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 2. DISPLAY PANEL -->
+                <StackPanel x:Name="PanelDisplay" Visibility="Collapsed">
+                    <TextBlock Text="Display" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="Information regarding host monitors, DPI scaling, and desktop resolution." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <Border Style="{StaticResource NexusCard}">
+                        <StackPanel>
+                            <TextBlock x:Name="ResolutionInfoText" Text="Primary Display: 1920 x 1080 @ 100% DPI" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,6" />
+                            <TextBlock Text="NEXUS OS automatically inherits your high-DPI scaling factors from Windows." FontSize="12" Foreground="{DynamicResource NexusTextSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 3. STORAGE PANEL -->
+                <StackPanel x:Name="PanelStorage" Visibility="Collapsed">
+                    <TextBlock Text="Storage &amp; Workspace" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="Manage your sandboxed Nexus OS storage and temporary files." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Workspace Root Location:" FontWeight="SemiBold" FontSize="13" />
+                            <TextBlock x:Name="WorkspacePathText" Text="%USERPROFILE%\NexusOS\Workspace" FontSize="12" Foreground="{DynamicResource NexusAccentBrush}" Margin="0,4,0,12" />
+
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Clear Cache" Style="{StaticResource NexusButtonGhost}" Margin="0,0,8,0" Click="ClearCache_Click" />
+                                <Button Content="Reset Storage to Defaults" Style="{StaticResource NexusButtonGhost}" Click="ResetStorage_Click" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 4. PRIVACY & SECURITY PANEL -->
+                <StackPanel x:Name="PanelSecurity" Visibility="Collapsed">
+                    <TextBlock Text="Privacy &amp; Security" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="Configure host execution isolation, Authenticode verification, and audit logs." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <Border Style="{StaticResource NexusCard}" Margin="0,0,0,16">
+                        <StackPanel>
+                            <CheckBox x:Name="PromptExecCheckBox" Content="Always prompt before executing applications on host Windows" IsChecked="True" Checked="SecuritySetting_Changed" Unchecked="SecuritySetting_Changed" Margin="0,0,0,10" />
+                            <CheckBox x:Name="VerifyAuthenticodeCheckBox" Content="Enforce Authenticode signature inspection for downloaded .exe files" IsChecked="True" Checked="SecuritySetting_Changed" Unchecked="SecuritySetting_Changed" Margin="0,0,0,10" />
+                            <TextBlock Text="Security Note: Nexus OS strictly respects Windows SmartScreen, Defender, and UAC elevation policies." FontSize="11.5" Foreground="{DynamicResource NexusTextMutedBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 5. PERFORMANCE PANEL -->
+                <StackPanel x:Name="PanelPerformance" Visibility="Collapsed">
+                    <TextBlock Text="Performance" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="Optimize rendering and hardware acceleration for your PC." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <Border Style="{StaticResource NexusCard}">
+                        <StackPanel>
+                            <CheckBox x:Name="LowResourceModeCheckBox" Content="Low-Resource Mode (Disables live blur &amp; complex drop shadows)" Checked="LowResourceMode_Changed" Unchecked="LowResourceMode_Changed" Margin="0,0,0,12" />
+                            <TextBlock Text="Hardware Acceleration: Direct3D Media Integration (Active)" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource NexusSuccessBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 6. ABOUT PANEL -->
+                <StackPanel x:Name="PanelAbout" Visibility="Collapsed">
+                    <TextBlock Text="About NEXUS OS" FontWeight="Bold" FontSize="20" Margin="0,0,0,4" />
+                    <TextBlock Text="System specifications and environment build numbers." FontSize="13" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,20" />
+
+                    <Border Style="{StaticResource NexusCard}">
+                        <StackPanel>
+                            <TextBlock Text="NEXUS OS Desktop Environment" FontWeight="Bold" FontSize="16" Margin="0,0,0,4" />
+                            <TextBlock Text="Version: 1.0.0 (Release Build 26300)" FontSize="12.5" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,2" />
+                            <TextBlock Text="Architecture: Windows x86_64 (.NET 10.0 WPF)" FontSize="12.5" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,2" />
+                            <TextBlock Text="Host Environment: Windows 11 Enterprise / Pro" FontSize="12.5" Foreground="{DynamicResource NexusTextSecondaryBrush}" Margin="0,0,0,12" />
+                            <Separator Background="{DynamicResource NexusBorderSubtleBrush}" Margin="0,4,0,12" />
+                            <TextBlock Text="Engineered with clean architecture, genuine Windows API integration, and verifiable Authenticode inspection." FontSize="11.5" Foreground="{DynamicResource NexusTextMutedBrush}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

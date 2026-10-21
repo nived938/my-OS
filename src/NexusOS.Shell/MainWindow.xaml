@@ -1,0 +1,194 @@
+<Window x:Class="NexusOS.Shell.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="clr-namespace:NexusOS.UI.Controls;assembly=NexusOS.UI"
+        mc:Ignorable="d"
+        Title="NEXUS OS - Windows Desktop Operating System"
+        Height="800" Width="1280"
+        MinHeight="600" MinWidth="900"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource NexusBackgroundBrush}"
+        Focusable="True"
+        KeyDown="Window_KeyDown">
+
+    <Grid x:Name="RootShellGrid">
+        
+        <!-- ============================================== -->
+        <!-- LAYER 1: DESKTOP BACKGROUND & WALLPAPER ENGINE -->
+        <!-- ============================================== -->
+        <!-- Fallback gradient ensures the desktop is NEVER black -->
+        <Border x:Name="DesktopBackgroundBorder">
+            <Border.Background>
+                <RadialGradientBrush Center="0.5,0.4" GradientOrigin="0.5,0.4" RadiusX="0.8" RadiusY="0.8">
+                    <GradientStop Color="#1E293B" Offset="0.0" />
+                    <GradientStop Color="#0F172A" Offset="0.6" />
+                    <GradientStop Color="#080C14" Offset="1.0" />
+                </RadialGradientBrush>
+            </Border.Background>
+
+            <!-- Wallpaper Image (safely bound and fallbacks gracefully) -->
+            <Image x:Name="WallpaperImage" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" />
+        </Border>
+
+        <!-- Host Shell Minimize / Exit Strip (Discreet top right controls for the outer Windows app) -->
+        <Border Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Panel.ZIndex="9999" Margin="0,4,12,0">
+            <StackPanel Orientation="Horizontal">
+                <Border Background="#66000000" CornerRadius="6" Padding="6,2">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="NEXUS OS [Host App]" FontSize="11" Foreground="#94A3B8" VerticalAlignment="Center" Margin="4,0,8,0" />
+                        <Button Content="—" Style="{StaticResource NexusButtonGhost}" Padding="6,0" Margin="2,0" FontSize="11" Click="HostMinimize_Click" ToolTip="Minimize Nexus OS to Windows Taskbar" />
+                        <Button Content="✕" Style="{StaticResource NexusButtonGhost}" Padding="6,0" Margin="2,0" FontSize="11" Click="HostClose_Click" ToolTip="Exit Nexus OS" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <!-- ============================================== -->
+        <!-- LAYER 2: INTERACTIVE DESKTOP ICONS CANVAS      -->
+        <!-- Native Drag and Drop enabled for host files!   -->
+        <!-- ============================================== -->
+        <Canvas x:Name="DesktopCanvas" 
+                AllowDrop="True"
+                Drop="DesktopCanvas_Drop"
+                DragOver="DesktopCanvas_DragOver"
+                DragEnter="DesktopCanvas_DragEnter"
+                MouseRightButtonUp="DesktopCanvas_MouseRightButtonUp"
+                MouseLeftButtonDown="DesktopCanvas_MouseLeftButtonDown">
+
+            <!-- Context Menu for Desktop -->
+            <Canvas.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="View">
+                        <MenuItem Header="Large Icons" Click="DesktopIconSize_Click" Tag="64" />
+                        <MenuItem Header="Medium Icons" Click="DesktopIconSize_Click" Tag="48" />
+                        <MenuItem Header="Small Icons" Click="DesktopIconSize_Click" Tag="36" />
+                    </MenuItem>
+                    <MenuItem Header="Refresh Desktop" Click="RefreshDesktop_Click" />
+                    <Separator />
+                    <MenuItem Header="Open Nexus Explorer" Click="OpenExplorer_Click" />
+                    <MenuItem Header="Open Terminal" Click="OpenTerminal_Click" />
+                    <MenuItem Header="Personalize (Settings)" Click="OpenSettings_Click" />
+                </ContextMenu>
+            </Canvas.ContextMenu>
+
+            <!-- Desktop Icons are generated here dynamically -->
+        </Canvas>
+
+        <!-- ============================================== -->
+        <!-- LAYER 3: WINDOW MANAGER CANVAS                 -->
+        <!-- Holds active movable & resizable windows       -->
+        <!-- ============================================== -->
+        <Canvas x:Name="WindowsCanvas" ClipToBounds="True">
+            
+            <!-- Window Snap Preview Rectangle -->
+            <Border x:Name="SnapPreviewOverlay" 
+                    Background="{DynamicResource NexusAccentBrush}" 
+                    Opacity="0.25"
+                    BorderBrush="{DynamicResource NexusAccentBrush}" 
+                    BorderThickness="2"
+                    CornerRadius="10"
+                    Visibility="Collapsed"
+                    IsHitTestVisible="False" />
+
+            <!-- Active window host controls are added here dynamically -->
+        </Canvas>
+
+        <!-- ============================================== -->
+        <!-- LAYER 4: FLYOUTS & OVERLAYS                    -->
+        <!-- ============================================== -->
+        
+        <!-- Start Menu Flyout -->
+        <ui:StartMenuControl x:Name="StartMenuFlyout" 
+                             HorizontalAlignment="Center" 
+                             VerticalAlignment="Bottom"
+                             Margin="0,0,0,56"
+                             Visibility="Collapsed"
+                             Panel.ZIndex="1000" />
+
+        <!-- Quick Settings Flyout -->
+        <ui:QuickSettingsFlyout x:Name="QuickSettingsFlyout" 
+                                HorizontalAlignment="Right" 
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,16,56"
+                                Visibility="Collapsed"
+                                Panel.ZIndex="1000" />
+
+        <!-- Action Center / Notification Flyout -->
+        <ui:ActionCenterFlyout x:Name="ActionCenterFlyout" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,16,56"
+                               Visibility="Collapsed"
+                               Panel.ZIndex="1000" />
+
+        <!-- Alt+Tab Switcher Overlay -->
+        <ui:AltTabOverlay x:Name="AltTabSwitcher" 
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"
+                          Visibility="Collapsed"
+                          Panel.ZIndex="2000" />
+
+        <!-- Authenticode Security Verification Modal -->
+        <Grid x:Name="SecurityModalGrid" Background="#99000000" Visibility="Collapsed" Panel.ZIndex="5000">
+            <Border Style="{StaticResource NexusCard}" Width="520" VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="2" BorderBrush="{DynamicResource NexusWarningBrush}">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,16">
+                        <Path Data="{StaticResource IconShield}" Fill="{DynamicResource NexusWarningBrush}" Width="28" Height="28" Stretch="Uniform" Margin="0,0,12,0" />
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="SECURITY VERIFICATION &amp; HOST LAUNCH" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource NexusWarningBrush}" />
+                            <TextBlock Text="Executable inspection before running on Windows" FontSize="12" Foreground="{DynamicResource NexusTextSecondaryBrush}" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <Border Background="{DynamicResource NexusSurfaceHoverBrush}" CornerRadius="8" Padding="14" Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock x:Name="SecFileNameText" Text="File: setup.exe" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,4" />
+                            <TextBlock x:Name="SecSignerText" Text="Signer: Microsoft Corporation" FontSize="12" Foreground="{DynamicResource NexusAccentBrush}" Margin="0,0,0,4" />
+                            <TextBlock x:Name="SecHashText" Text="SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" FontSize="11" Foreground="{DynamicResource NexusTextMutedBrush}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                            <TextBlock x:Name="SecRiskText" Text="Risk Rating: VerifiedSafe" FontWeight="SemiBold" FontSize="12" Foreground="{DynamicResource NexusSuccessBrush}" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Do you want to authorize running this program on your Windows host system? Windows User Account Control (UAC) will handle any required elevation." 
+                               FontSize="12" Foreground="{DynamicResource NexusTextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,20" LineHeight="17" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Cancel" Style="{StaticResource NexusButtonGhost}" Padding="16,6" Margin="0,0,10,0" Click="CancelSecurityModal_Click" />
+                        <Button x:Name="AuthorizeLaunchButton" Content="Authorize &amp; Run" Style="{StaticResource NexusButtonPrimary}" Padding="16,6" Click="AuthorizeSecurityLaunch_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- ============================================== -->
+        <!-- LAYER 5: TASKBAR CONTROL                       -->
+        <!-- Docked to bottom edge of screen                -->
+        <!-- ============================================== -->
+        <ui:TaskbarControl x:Name="Taskbar" 
+                           VerticalAlignment="Bottom" 
+                           Height="48"
+                           Panel.ZIndex="500" />
+
+        <!-- ============================================== -->
+        <!-- LAYER 6: BOOT / SPLASH SCREEN                  -->
+        <!-- Smooth fade-in on application startup          -->
+        <!-- ============================================== -->
+        <Grid x:Name="BootScreenGrid" Background="#060911" Panel.ZIndex="10000" Visibility="Visible">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <!-- Nexus Modern Logo -->
+                <Border Width="72" Height="72" CornerRadius="36" Background="{DynamicResource NexusAccentBrush}" Margin="0,0,0,20" HorizontalAlignment="Center">
+                    <TextBlock Text="NX" FontWeight="Bold" FontSize="28" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+
+                <TextBlock Text="NEXUS OS" FontWeight="Bold" FontSize="26" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                <TextBlock Text="Desktop Operating System for Windows" FontSize="13" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,0,0,24" />
+
+                <ProgressBar Width="200" Height="4" IsIndeterminate="True" Foreground="{DynamicResource NexusAccentBrush}" Background="#1F2937" HorizontalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Window>

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NexusOS.Apps/NexusOS.Apps.csproj" />
+    <Project Path="src/NexusOS.Core/NexusOS.Core.csproj" />
+    <Project Path="src/NexusOS.Infrastructure/NexusOS.Infrastructure.csproj" />
+    <Project Path="src/NexusOS.Shell/NexusOS.Shell.csproj" />
+    <Project Path="src/NexusOS.UI/NexusOS.UI.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NexusOS.Tests/NexusOS.Tests.csproj" />
+  </Folder>
+</Solution>
